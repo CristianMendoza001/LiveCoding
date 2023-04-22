@@ -2,7 +2,7 @@
 
 require 'vendor/autoload.php';
 
-use Crimsoncircle\Component\Routing;
+use App\Component\Routing;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel;

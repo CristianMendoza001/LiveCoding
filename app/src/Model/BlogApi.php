@@ -1,6 +1,6 @@
 <?php
 
-namespace Crimsoncircle\Model;
+namespace App\Model;
 
 class BlogApi
 {

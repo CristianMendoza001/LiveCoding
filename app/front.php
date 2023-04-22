@@ -2,7 +2,7 @@
 require_once __DIR__.'/vendor/autoload.php';
 
 use Symfony\Component\HttpFoundation\Request;
-use Crimsoncircle\Simplex\StringResponseListener;
+use App\Simplex\StringResponseListener;
 use Symfony\Component\DependencyInjection\Reference;
 
 $request = Request::createFromGlobals();

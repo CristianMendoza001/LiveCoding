@@ -1,7 +1,7 @@
 <?php
-namespace Crimsoncircle\Controller;
+namespace App\Controller;
 
-use Crimsoncircle\Model\LeapYear;
+use App\Model\LeapYear;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

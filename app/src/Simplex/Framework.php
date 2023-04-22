@@ -1,6 +1,6 @@
 <?php
 
-namespace Crimsoncircle\Simplex;
+namespace App\Simplex;
 
 use Symfony\Component\HttpKernel\HttpKernel;
 

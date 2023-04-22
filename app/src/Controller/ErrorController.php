@@ -1,6 +1,6 @@
 <?php
 
-namespace Crimsoncircle\Controller;
+namespace App\Controller;
 
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\HttpFoundation\Response;

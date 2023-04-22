@@ -1,6 +1,6 @@
 <?php
 
-use Crimsoncircle\Simplex\Framework;
+use App\Simplex\Framework;
 use Symfony\Component\DependencyInjection;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\EventDispatcher;
@@ -21,7 +21,7 @@ $containerBuilder->register('listener.router', HttpKernel\EventListener\RouterLi
 $containerBuilder->register('listener.response', HttpKernel\EventListener\ResponseListener::class)
     ->setArguments(['UTF-8']);
 $containerBuilder->register('listener.exception', HttpKernel\EventListener\ErrorListener::class)
-    ->setArguments(['Crimsoncircle\Controller\ErrorController::exception']);
+    ->setArguments(['App\Controller\ErrorController::exception']);
 $containerBuilder->register('dispatcher', EventDispatcher\EventDispatcher::class)
     ->addMethodCall('addSubscriber', [new Reference('listener.router')])
     ->addMethodCall('addSubscriber', [new Reference('listener.response')])

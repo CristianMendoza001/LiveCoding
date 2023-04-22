@@ -1,7 +1,7 @@
 <?php
-namespace Crimsoncircle\Controller;
+namespace App\Controller;
 
-// use Crimsoncircle\Model\BlogApi;
+// use App\Model\BlogApi;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 

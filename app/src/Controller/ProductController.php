@@ -11,7 +11,7 @@ class ProductController extends AbstractController
     #[Route('/product', name: 'app_product')]
     public function index(): JsonResponse
     {
-        return $this->json([
+        return new JsonResponse([
             'message' => 'Welcome to your new controller!',
             'path' => 'src/Controller/ProductController.php',
         ]);

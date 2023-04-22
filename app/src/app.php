@@ -12,6 +12,9 @@ $routes->add('blog', new Routing\Route('/blog', [
 $routes->add('product', new Routing\Route('/product', [
     '_controller' => 'App\Controller\ProductController::index',
 ]));
+$routes->add('create_product', new Routing\Route('/create_product', [
+    '_controller' => 'App\Controller\ProductController::createProduct',
+]));
 
 return $routes;
 

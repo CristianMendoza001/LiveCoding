@@ -10,9 +10,9 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-use App\Entity\Blogs;
+use App\Entity\Blog;
 
-class BlogsController extends AbstractController
+class BlogController extends AbstractController
 {
 
     public function index(Request $request): JsonResponse
@@ -21,10 +21,10 @@ class BlogsController extends AbstractController
         $msg = '';
         $date = new \DateTime();
         $entityManager = include dirname(__FILE__).'/../../db.php';
-        dd($entityManager->find('App\Entity\Blogs', 1));
+        dd($entityManager->find('App\Entity\Blog', 1));
 
         if($request->isMethod('get')){
-            $blogs_db = $entityManager->getRepository(Blogs::class)->where('deleted_at', NULL)->findAll();
+            $blogs_db = $entityManager->getRepository(Blog::class)->where('deleted_at', NULL)->findAll();
             foreach($blogs_db as $blog) {
                 $blogs[] = [
                     'id' => $blog->getId(),
@@ -46,7 +46,7 @@ class BlogsController extends AbstractController
             }
             else {
                 $slug = strtolower(str_replace(' ', '_', $title));
-                $blog = new Blogs();
+                $blog = new Blog();
                 $blog->setCreatedAt($date);
                 $blog->setUpdatedAt($date);
                 $blog->setTitle($title);
@@ -72,7 +72,7 @@ class BlogsController extends AbstractController
             return new JsonResponse(['message' => $msg, 'blog' => $blog]);
         }
 
-        $blog_db = $entityManager->getRepository(Blogs::class)->where('deleted_at', NULL)->where('slug', $slugBlog)->find();
+        $blog_db = $entityManager->getRepository(Blog::class)->where('deleted_at', NULL)->where('slug', $slugBlog)->find();
         foreach($blog_db as $blog) {
             $blog = [
                 'id' => $blog->getId(),

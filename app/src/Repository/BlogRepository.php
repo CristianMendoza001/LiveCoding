@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Blogs;
+use App\Entity\Blog;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Blogs>
+ * @extends ServiceEntityRepository<Blog>
  *
- * @method Blogs|null find($id, $lockMode = null, $lockVersion = null)
- * @method Blogs|null findOneBy(array $criteria, array $orderBy = null)
- * @method Blogs[]    findAll()
- * @method Blogs[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Blog|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Blog|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Blog[]    findAll()
+ * @method Blog[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class BlogsRepository extends ServiceEntityRepository
+class BlogRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Blogs::class);
+        parent::__construct($registry, Blog::class);
     }
 
-    public function save(Blogs $entity, bool $flush = false): void
+    public function save(Blog $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class BlogsRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Blogs $entity, bool $flush = false): void
+    public function remove(Blog $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class BlogsRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Blogs[] Returns an array of Blogs objects
+//     * @return Blog[] Returns an array of Blog objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class BlogsRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Blogs
+//    public function findOneBySomeField($value): ?Blog
 //    {
 //        return $this->createQueryBuilder('b')
 //            ->andWhere('b.exampleField = :val')

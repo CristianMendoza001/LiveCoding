@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Repository\BlogsRepository;
+use App\Repository\BlogRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: BlogsRepository::class)]
-class Blogs
+#[ORM\Entity(repositoryClass: BlogRepository::class)]
+class Blog
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -37,12 +37,12 @@ class Blogs
     #[ORM\Column(length: 80)]
     private ?string $slug = null;
 
-    #[ORM\OneToMany(mappedBy: 'blog_id', targetEntity: Comments::class, orphanRemoval: true)]
-    private Collection $comments;
+    #[ORM\OneToMany(mappedBy: 'blog_id', targetEntity: Comment::class, orphanRemoval: true)]
+    private Collection $comment;
 
     public function __construct()
     {
-        $this->comments = new ArrayCollection();
+        $this->comment = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -135,26 +135,26 @@ class Blogs
     }
 
     /**
-     * @return Collection<int, Comments>
+     * @return Collection<int, Comment>
      */
-    public function getComments(): Collection
+    public function getComment(): Collection
     {
-        return $this->comments;
+        return $this->comment;
     }
 
-    public function addComment(Comments $comment): self
+    public function addComment(Comment $comment): self
     {
-        if (!$this->comments->contains($comment)) {
-            $this->comments->add($comment);
+        if (!$this->comment->contains($comment)) {
+            $this->comment->add($comment);
             $comment->setBlogId($this);
         }
 
         return $this;
     }
 
-    public function removeComment(Comments $comment): self
+    public function removeComment(Comment $comment): self
     {
-        if ($this->comments->removeElement($comment)) {
+        if ($this->comment->removeElement($comment)) {
             // set the owning side to null (unless already changed)
             if ($comment->getBlogId() === $this) {
                 $comment->setBlogId(null);

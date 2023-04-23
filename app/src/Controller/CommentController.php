@@ -6,14 +6,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CommentsController extends AbstractController
+class CommentController extends AbstractController
 {
-    #[Route('/comments', name: 'app_comments')]
+    #[Route('/comment', name: 'app_comment')]
     public function index(): JsonResponse
     {
         return $this->json([
             'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/CommentsController.php',
+            'path' => 'src/Controller/CommentController.php',
         ]);
     }
 }

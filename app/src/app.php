@@ -17,10 +17,10 @@ $routes->add('create_product', new Routing\Route('/create_product', [
 
 //Blog section
 $routes->add('blog', new Routing\Route('/blog', [
-    '_controller' => 'App\Controller\BlogsController::index',
+    '_controller' => 'App\Controller\BlogController::index',
 ]));
 $routes->add('blog_id', new Routing\Route('/blog/{slug}', [
-    '_controller' => 'App\Controller\BlogsController::getBlogBySlug',
+    '_controller' => 'App\Controller\BlogController::getBlogBySlug',
 ]));
 
 return $routes;

@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\CommentsRepository;
+use App\Repository\CommentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: CommentsRepository::class)]
-class Comments
+#[ORM\Entity(repositoryClass: CommentRepository::class)]
+class Comment
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -29,9 +29,9 @@ class Comments
     #[ORM\Column(length: 120)]
     private ?string $author = null;
 
-    #[ORM\ManyToOne(inversedBy: 'comments')]
+    #[ORM\ManyToOne(inversedBy: 'comment')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Blogs $blog_id = null;
+    private ?Blog $blog_id = null;
 
     public function getId(): ?int
     {
@@ -98,12 +98,12 @@ class Comments
         return $this;
     }
 
-    public function getBlogId(): ?Blogs
+    public function getBlogId(): ?Blog
     {
         return $this->blog_id;
     }
 
-    public function setBlogId(?Blogs $blog_id): self
+    public function setBlogId(?Blog $blog_id): self
     {
         $this->blog_id = $blog_id;
 

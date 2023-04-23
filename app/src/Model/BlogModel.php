@@ -23,6 +23,14 @@ class BlogModel
         return $blogs;
     }
 
+    public function findBlogBySlug(string $slug, ?bool $includeSoftDelete = FALSE): array {
+        $query = "SELECT ".$this->entitySuffix." FROM ".$this->entity." ".$this->entitySuffix.
+                  ' WHERE '.$this->entitySuffix.'.slug = ?1'.
+                  ((!$includeSoftDelete) ? ' AND '.$this->entitySuffix.'.deleted_at IS NULL' : '');
+        $blog = $this->entityManager->createQuery($query)->setParameter(1, $slug)->getResult();
+        return (sizeof($blog) > 0 ? array($blog[0]) : array());
+    }
+
     public function insertBlog(array $data) {
         $date = new \DateTime();
 
@@ -36,6 +44,22 @@ class BlogModel
 
         $this->entityManager->persist($blog);
         $this->entityManager->flush();
+    }
+
+    public function deleteBlogBySlug(string $slug): bool {
+        $query = "SELECT ".$this->entitySuffix." FROM ".$this->entity." ".$this->entitySuffix.
+                  ' WHERE '.$this->entitySuffix.'.slug = ?1 AND '.$this->entitySuffix.'.deleted_at IS NULL';
+        $blog = $this->entityManager->createQuery($query)->setParameter(1, $slug)->getResult();
+        if(sizeof($blog) > 0) {
+            $date = new \DateTime();
+            $blogToUpdate = $blog[0];
+            $blogToUpdate->setDeletedAt($date);
+
+            $this->entityManager->flush();
+            return TRUE;
+        }
+        else 
+            return FALSE;
     }
 
 }

@@ -16,11 +16,9 @@ $routes->add('create_product', new Routing\Route('/create_product', [
 ]));
 
 //Blog section
-$routes->add('blog', new Routing\Route('/blog', [
+$routes->add('blog', new Routing\Route('/blog/{slug}', [
+    'slug' => null,
     '_controller' => 'App\Controller\BlogController::index',
-]));
-$routes->add('blog_id', new Routing\Route('/blog/{slug}', [
-    '_controller' => 'App\Controller\BlogController::getBlogBySlug',
 ]));
 
 return $routes;

@@ -12,26 +12,39 @@ use App\Model\BlogModel;
 class BlogController extends AbstractController
 {
 
-    public function index(Request $request): JsonResponse
+    public function index(Request $request, ?string $slug): JsonResponse
     {
         $blogs = [];
         $msg = '';
         $blogModel = new BlogModel();
 
         if($request->isMethod('get')){
-            $blogs = $this->createBlogsData($blogModel);
-            $msg = (sizeof($blogs) > 0 ? 'Watching all blogs' : 'Ups! No Blogs for watch');
+            $blogs = ($slug == NULL ? $this->createBlogsData($blogModel) : $this->createBlogsData($blogModel, $slug));
+            $msg = (sizeof($blogs) > 0 ? (($slug == NULL) ? 'Watching all blogs' : 'Watching the selected blog') 
+                                       : (($slug == NULL) ? 'Ups! No Blogs for watch' : 'Ups! No blog with that slug'));
         }
-        else{
-            $msg = ($this->insertBlog($request, $blogModel) ? 'Blog Succesfully Created' : 'Error in given data');
+        else if($request->isMethod('post')) {
+            $blogs = $this->insertBlog($request, $blogModel);
+            $msg = ($blogs != NULL ? 'Blog Succesfully Created' : 'Error in given data');
+        }
+        else if($request->isMethod('delete')) {
+            if($slug == NULL)
+                $msg = 'The sluf is required for delete the blog';
+            else {
+                $isDeleted = $blogModel->deleteBlogBySlug($slug);
+                $msg = ($isDeleted ? 'Blog Successfully Erased!' : "Doesn't exists the blog for erase!");
+            }
+        }
+        else {
+            $msg = "Your petition couldn't be processed";
         }
 
         return new JsonResponse(['message' => $msg, 'data' => $blogs]);
     }//end index function
 
-    private function createBlogsData(BlogModel $blogModel): array {
+    private function createBlogsData(BlogModel $blogModel, ?String $slug = ''): array {
         $blogs = [];
-        $blogsDb = $blogModel->findAllBlogs();
+        $blogsDb = ($slug == NULL ? $blogModel->findAllBlogs() : $blogModel->findBlogBySlug($slug));
         foreach($blogsDb as $blog) {
             $blogs[] = [
                 'created_at' => $blog->getCreatedAt(),
@@ -45,51 +58,20 @@ class BlogController extends AbstractController
         return $blogs;
     }//end createBlogsData
 
-    private function insertBlog(Request $request, BlogModel $blogModel): bool {
+    private function insertBlog(Request $request, BlogModel $blogModel): array {
         $blog = array();
         $blog['title'] = $request->request->get('title');
         $blog['content'] = $request->request->get('content');
         $blog['author'] = $request->request->get('author');
         
         if($blog['title'] == NULL || $blog['content'] == NULL || $blog['author'] == NULL) {
-            return FALSE;
+            return array();
         }
         else {
             $blog['slug'] = strtolower(str_replace(' ', '_', $blog['title']));
             $blogModel->insertBlog($blog);
-            return TRUE;
+            return $blog;
         }
-    }//end insertBlog
-
-
-    public function getBlogBySlug(Request $request, EntityManagerInterface $entityManager, string $slugBlog): JsonResponse
-    {
-        $blog = [];
-        $msg = '';
-        if($idBlog == NULL){
-            $msg = 'The slug of the blog is needed';
-            return new JsonResponse(['message' => $msg, 'blog' => $blog]);
-        }
-
-        $blog_db = $entityManager->getRepository(Blog::class)->where('deleted_at', NULL)->where('slug', $slugBlog)->find();
-        foreach($blog_db as $blog) {
-            $blog = [
-                'id' => $blog->getId(),
-                'title' => $blog->getTitle(),
-                'content' => $blog->getContent(),
-                'author' => $blog->getAuthor(),
-                'slug' => $blog->getSlug()
-            ];
-        }
-        $msg = 'Blog find it';
-
-        if($request->isMethod('get'))
-            return new JsonResponse(['message' => $msg, 'blog' => $blog]);
-        else {
-            $entityManager->remove($blog_db[0]);
-            $entityManager->flush();
-            return new JsonResponse(['message' => $msg.' and deleted it!', 'blog' => $blog]);
-        }
-    }      
+    }//end insertBlog   
 
 }

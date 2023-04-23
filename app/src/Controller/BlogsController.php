@@ -20,8 +20,8 @@ class BlogsController extends AbstractController
         $blogs = [];
         $msg = '';
         $date = new \DateTime();
-        $entityManager = include dirname(__FILE__).'/../../blog_container.php';;
-        dd($entityManager);
+        $entityManager = include dirname(__FILE__).'/../../db.php';
+        dd($entityManager->find('App\Entity\Blogs', 1));
 
         if($request->isMethod('get')){
             $blogs_db = $entityManager->getRepository(Blogs::class)->where('deleted_at', NULL)->findAll();

@@ -7,10 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\DependencyInjection\Reference;
-
-use App\Entity\Blog;
+use App\Model\BlogModel;
 
 class BlogController extends AbstractController
 {
@@ -19,49 +16,51 @@ class BlogController extends AbstractController
     {
         $blogs = [];
         $msg = '';
-        $date = new \DateTime();
-        $entityManager = include dirname(__FILE__).'/../../db.php';
-        dd($entityManager->find('App\Entity\Blog', 1));
+        $blogModel = new BlogModel();
 
         if($request->isMethod('get')){
-            $blogs_db = $entityManager->getRepository(Blog::class)->where('deleted_at', NULL)->findAll();
-            foreach($blogs_db as $blog) {
-                $blogs[] = [
-                    'id' => $blog->getId(),
-                    'title' => $blog->getTitle(),
-                    'content' => $blog->getContent(),
-                    'author' => $blog->getAuthor(),
-                    'slug' => $blog->getSlug()
-                ];
-            }
-            $msg = 'Watching all blogs';
-        }//end if it's a get
+            $blogs = $this->createBlogsData($blogModel);
+            $msg = (sizeof($blogs) > 0 ? 'Watching all blogs' : 'Ups! No Blogs for watch');
+        }
         else{
-            $title = $request->request->get('title');
-            $content = $request->request->get('content');
-            $author = $request->request->get('author');
-            
-            if($title == NULL || $content == NULL || $author == NULL){
-                $msg = 'Error in given data';
-            }
-            else {
-                $slug = strtolower(str_replace(' ', '_', $title));
-                $blog = new Blog();
-                $blog->setCreatedAt($date);
-                $blog->setUpdatedAt($date);
-                $blog->setTitle($title);
-                $blog->setContent($content);
-                $blog->setAuthor($author);
-                $blog->setSlug($slug);
-                
-                $entityManager->persist($blog);
-                $entityManager->flush();
+            $msg = ($this->insertBlog($request, $blogModel) ? 'Blog Succesfully Created' : 'Error in given data');
+        }
 
-                $msg = 'Blog created Succesfully';
-            }
-        }//end else it's a get
         return new JsonResponse(['message' => $msg, 'data' => $blogs]);
-    }
+    }//end index function
+
+    private function createBlogsData(BlogModel $blogModel): array {
+        $blogs = [];
+        $blogsDb = $blogModel->findAllBlogs();
+        foreach($blogsDb as $blog) {
+            $blogs[] = [
+                'created_at' => $blog->getCreatedAt(),
+                'id' => $blog->getId(),
+                'title' => $blog->getTitle(),
+                'content' => $blog->getContent(),
+                'author' => $blog->getAuthor(),
+                'slug' => $blog->getSlug()
+            ];
+        }
+        return $blogs;
+    }//end createBlogsData
+
+    private function insertBlog(Request $request, BlogModel $blogModel): bool {
+        $blog = array();
+        $blog['title'] = $request->request->get('title');
+        $blog['content'] = $request->request->get('content');
+        $blog['author'] = $request->request->get('author');
+        
+        if($blog['title'] == NULL || $blog['content'] == NULL || $blog['author'] == NULL) {
+            return FALSE;
+        }
+        else {
+            $blog['slug'] = strtolower(str_replace(' ', '_', $blog['title']));
+            $blogModel->insertBlog($blog);
+            return TRUE;
+        }
+    }//end insertBlog
+
 
     public function getBlogBySlug(Request $request, EntityManagerInterface $entityManager, string $slugBlog): JsonResponse
     {

@@ -6,20 +6,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\ORM\EntityManagerInterface;
+
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 use App\Entity\Blogs;
 
 class BlogsController extends AbstractController
 {
 
-    #[Route('/blog', name: 'app_blogs')]
-    public function index(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         $blogs = [];
         $msg = '';
         $date = new \DateTime();
+        $entityManager = include dirname(__FILE__).'/../../blog_container.php';;
+        dd($entityManager);
 
         if($request->isMethod('get')){
             $blogs_db = $entityManager->getRepository(Blogs::class)->where('deleted_at', NULL)->findAll();
@@ -61,7 +63,6 @@ class BlogsController extends AbstractController
         return new JsonResponse(['message' => $msg, 'data' => $blogs]);
     }
 
-    #[Route('/blog_id', name: 'blog_id')]
     public function getBlogBySlug(Request $request, EntityManagerInterface $entityManager, string $slugBlog): JsonResponse
     {
         $blog = [];

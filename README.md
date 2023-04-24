@@ -10,9 +10,11 @@ The migration of the DB is created, only need to write the nexts commands in the
 
 ## Explanation of extra files
 **Factory**
+
 Is the folder where the own factory classes are created, in this folder we could find the Factory for create the connection to the DB.
 
 **db.php**
+
 Here goes the dependency injection for the container that has the DB connection.
 
 ## Evidencies for the challenge 3

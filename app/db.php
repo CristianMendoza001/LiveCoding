@@ -11,7 +11,7 @@ $isDevMode = true;
 $config = ORM\ORMSetup::createAttributeMetadataConfiguration($paths, $isDevMode);
 
 $dsnParser = new DBAL\Tools\DsnParser(['mysql' => 'mysqli', 'postgres' => 'pdo_pgsql']);
-$connectionParams = $dsnParser->parse('mysql://root:crimsoncircle@db:3306/blogsite');
+$connectionParams = $dsnParser->parse(Factory\Constants::$DB_URL);
 $conn = DBAL\DriverManager::getConnection($connectionParams);
 
 $containerBuilder = new ContainerBuilder();

@@ -21,5 +21,15 @@ $routes->add('blog', new Routing\Route('/blog/{slug}', [
     '_controller' => 'App\Controller\BlogController::index',
 ]));
 
+//Comment section
+$routes->add('comments_blog', new Routing\Route('/comment/post/{idBlog}', [
+    'idBlog' => null,
+    '_controller' => 'App\Controller\CommentController::getCommentsByBlog',
+]));
+$routes->add('comment', new Routing\Route('/comment/{idComment}', [
+    'idComment' => null,
+    '_controller' => 'App\Controller\CommentController::index',
+]));
+
 return $routes;
 

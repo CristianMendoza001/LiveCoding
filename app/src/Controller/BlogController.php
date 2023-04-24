@@ -23,18 +23,26 @@ class BlogController extends AbstractController
             $msg = (sizeof($blogs) > 0 ? (($slug == NULL) ? 'Watching all blogs' : 'Watching the selected blog') 
                                        : (($slug == NULL) ? 'Ups! No Blogs for watch' : 'Ups! No blog with that slug'));
         }
+
         else if($request->isMethod('post')) {
-            $blogs = $this->insertBlog($request, $blogModel);
-            $msg = ($blogs != NULL ? 'Blog Succesfully Created' : 'Error in given data');
+            if($slug == NULL){
+                $blogs = $this->insertBlog($request, $blogModel);
+                $msg = ($blogs != NULL ? 'Blog Succesfully Created' : 'Error in given data');
+            }
+            else{
+                $msg = 'The URL data are incorrect, please try again';
+            }
         }
+
         else if($request->isMethod('delete')) {
             if($slug == NULL)
-                $msg = 'The sluf is required for delete the blog';
+                $msg = 'The slug is required for delete the blog';
             else {
                 $isDeleted = $blogModel->deleteBlogBySlug($slug);
                 $msg = ($isDeleted ? 'Blog Successfully Erased!' : "Doesn't exists the blog for erase!");
             }
         }
+        
         else {
             $msg = "Your petition couldn't be processed";
         }
